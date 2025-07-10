@@ -23,6 +23,7 @@ func main() {
 func random(w http.ResponseWriter, r *http.Request) {
 	src := rand.NewSource(time.Now().UnixNano())
 	random := rand.New(src)
-	numb := []byte(fmt.Sprintf("%d", random.Intn(10)))
+	randomNum := random.Intn(6) + 1 // Random number between 1 and 6
+	numb := []byte(fmt.Sprintf("%d", randomNum))
 	w.Write(numb)
 }
