@@ -28,14 +28,14 @@ func NewAuthHandler(router *http.ServeMux, deps AuthHandlerDeps) {
 func (handler *AuthHandler) Send() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		e := email.NewEmail()
-		e.From = "Jordan Wright <test@gmail.com>"
+		e.From = handler.Auth.Address
 		e.To = []string{"test@example.com"}
 		e.Bcc = []string{"test_bcc@example.com"}
 		e.Cc = []string{"test_cc@example.com"}
 		e.Subject = "Awesome Subject"
 		e.Text = []byte("Text Body is, of course, supported!")
 		e.HTML = []byte("<h1>Fancy HTML is supported, too!</h1>")
-		err := e.Send("smtp.gmail.com:587", smtp.PlainAuth("", "test@gmail.com", "password123", "smtp.gmail.com"))
+		err := e.Send("smtp.gmail.com:587", smtp.PlainAuth("", handler.Auth.Email, handler.Auth.Password, "smtp.gmail.com"))
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			return
@@ -47,6 +47,23 @@ func (handler *AuthHandler) Send() http.HandlerFunc {
 
 func (handler *AuthHandler) Verify() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		fmt.Println("Verify from Handler!")
+		// Извлечение hash из URL
+		hash := r.PathValue("hash")
+		if hash == "" {
+			http.Error(w, "missing hash", http.StatusBadRequest)
+			return
+		}
+
+		// Пример логики верификации (здесь просто проверка длины или конкретного значения)
+		if isValidHash(hash) {
+			w.WriteHeader(http.StatusOK)
+			fmt.Fprint(w, "Hash verified successfully")
+		} else {
+			http.Error(w, "invalid or expired hash", http.StatusUnauthorized)
+		}
 	}
+}
+
+func isValidHash(hash string) bool {
+	return len(hash) == 32
 }
