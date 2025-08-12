@@ -13,8 +13,8 @@ type AuthConfig struct {
 func LoadConfig() *Config {
 	return &Config{
 		Auth: AuthConfig{
-			Email:    "",
-			Password: "",
+			Email:    "Test@test.ru",
+			Password: "123",
 			Address:  "",
 		},
 	}
