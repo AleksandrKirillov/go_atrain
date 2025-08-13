@@ -1,0 +1,13 @@
+package order
+
+import (
+	"github.com/lib/pq"
+	"gorm.io/gorm"
+)
+
+type Order struct {
+	gorm.Model
+	Name        string         `json:"name"`
+	Description string         `json:"description"`
+	Images      pq.StringArray `json:"images" gorm:"type:text[]"`
+}
