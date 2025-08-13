@@ -1,4 +1,4 @@
-package main
+package migrations
 
 import (
 	"api/order/internal/order"
@@ -9,7 +9,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func main() {
+func Migrate() {
 	err := godotenv.Load(".env")
 	if err != nil {
 		panic(err)
