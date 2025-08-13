@@ -20,5 +20,5 @@ func main() {
 		panic(err)
 	}
 
-	db.AutoMigrate(order.Order{})
+	db.AutoMigrate(order.Product{})
 }

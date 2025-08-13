@@ -5,7 +5,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type Order struct {
+type Product struct {
 	gorm.Model
 	Name        string         `json:"name"`
 	Description string         `json:"description"`
