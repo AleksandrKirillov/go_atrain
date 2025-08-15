@@ -35,7 +35,7 @@ func (repo *ProductRepository) Get(id uint) (*Product, error) {
 }
 
 func (repo *ProductRepository) Update(product *Product) (*Product, error) {
-	result := repo.Database.DB.Clauses(clause.Returning{}).Updates(product)
+	result := repo.Database.DB.Where("id = ?", product.ID).Clauses(clause.Returning{}).Updates(product)
 	if result.Error != nil {
 		return nil, result.Error
 	}
