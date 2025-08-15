@@ -16,6 +16,6 @@ func NewProduct(name string, description string, images pq.StringArray) *Product
 	return &Product{
 		Name:        name,
 		Description: description,
-		Images:      pq.StringArray{},
+		Images:      images,
 	}
 }
