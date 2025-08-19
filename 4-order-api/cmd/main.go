@@ -5,6 +5,7 @@ import (
 	"api/order/internal/order"
 	"api/order/migrations"
 	"api/order/pkg/db"
+	"api/order/pkg/middleware"
 	"fmt"
 	"net/http"
 )
@@ -22,9 +23,13 @@ func main() {
 		ProductRepository: productRepo,
 	})
 
+	stack := middleware.Chain(
+		middleware.Logging,
+	)
+
 	server := &http.Server{
 		Addr:    ":8081",
-		Handler: router,
+		Handler: stack(router),
 	}
 
 	fmt.Println("Server is running on port 8081...")
