@@ -2,7 +2,9 @@ package main
 
 import (
 	"api/order/configs"
+	"api/order/internal/auth"
 	"api/order/internal/order"
+	"api/order/internal/user"
 	"api/order/migrations"
 	"api/order/pkg/db"
 	"api/order/pkg/middleware"
@@ -16,11 +18,22 @@ func main() {
 	config := configs.LoadConfig()
 	db := db.NewDb(config)
 	router := http.NewServeMux()
+
 	// Repositories
 	productRepo := order.NewProductRepository(db)
+	userRepo := user.NewUserRepository(db)
+
+	// Services
+	authService := auth.NewAuthService(userRepo)
+
 	// Handlers
 	order.NewProductHandler(router, order.ProductHandlerDeps{
 		ProductRepository: productRepo,
+	})
+
+	auth.NewAuthHandler(router, auth.AuthHandlerDeps{
+		Config:      config,
+		AuthService: authService,
 	})
 
 	stack := middleware.Chain(
@@ -34,6 +47,4 @@ func main() {
 
 	fmt.Println("Server is running on port 8081...")
 	server.ListenAndServe()
-
-	// Further initialization logic can go here
 }
