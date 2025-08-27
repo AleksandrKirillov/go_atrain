@@ -56,13 +56,13 @@ func (handler *AuthHandler) Confirm() http.HandlerFunc {
 			return
 		}
 
-		sessionId, err := handler.AuthService.Confirm(payload.SessionId, payload.Code)
+		phone, err := handler.AuthService.Confirm(payload.SessionId, payload.Code)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusUnauthorized)
 			return
 		}
 
-		token, err := jwt.NewJWT(handler.Config.Auth.Secret).Create(sessionId)
+		token, err := jwt.NewJWT(handler.Config.Auth.Secret).Create(phone)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return

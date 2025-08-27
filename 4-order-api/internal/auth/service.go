@@ -57,5 +57,5 @@ func (service *AuthService) Confirm(sessionId string, code int) (string, error) 
 		return "", errors.New(ErrWrongCredential + " code mismatch")
 	}
 
-	return userExisted.SessionId, nil
+	return userExisted.Phone, nil
 }

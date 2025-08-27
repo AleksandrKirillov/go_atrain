@@ -28,6 +28,7 @@ func main() {
 
 	// Handlers
 	order.NewProductHandler(router, order.ProductHandlerDeps{
+		Config:            config,
 		ProductRepository: productRepo,
 	})
 

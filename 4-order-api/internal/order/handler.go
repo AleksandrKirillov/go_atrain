@@ -1,6 +1,8 @@
 package order
 
 import (
+	"api/order/configs"
+	"api/order/pkg/middleware"
 	"api/order/pkg/req"
 	"api/order/pkg/resp"
 	"fmt"
@@ -11,18 +13,22 @@ import (
 )
 
 type ProductHandlerDeps struct {
+	*configs.Config
 	ProductRepository *ProductRepository
 }
 type ProductHandler struct {
+	*configs.Config
 	ProductRepository *ProductRepository
 }
 
 func NewProductHandler(router *http.ServeMux, deps ProductHandlerDeps) {
 	handler := &ProductHandler{
+		Config:            deps.Config,
 		ProductRepository: deps.ProductRepository,
 	}
 
-	router.HandleFunc("POST /product", handler.Create())
+	router.Handle("POST /product", middleware.Auth(handler.Create(),
+		middleware.AuthMiddleware{Secret: handler.Config.Auth.Secret}))
 	router.HandleFunc("PATCH /product/{id}", handler.Update())
 	router.HandleFunc("DELETE /product/{id}", handler.Delete())
 	router.HandleFunc("GET /product/{id}", handler.Get())
@@ -31,6 +37,12 @@ func NewProductHandler(router *http.ServeMux, deps ProductHandlerDeps) {
 
 func (handler *ProductHandler) Create() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		phone, ok := r.Context().Value(middleware.ContextSessionKey).(string)
+		if !ok || phone == "" {
+			http.Error(w, "Unauthorized", http.StatusUnauthorized)
+			return
+		}
+
 		fmt.Println("Creating product...")
 		body, err := req.HandleBody[ProductCreateRequest](w, r)
 		if err != nil {
