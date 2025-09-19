@@ -1,19 +1,21 @@
 package order
 
 import (
+	"api/order/internal/product"
+	"api/order/internal/user"
+
 	"github.com/lib/pq"
 	"gorm.io/gorm"
 )
 
-type Product struct {
+type Order struct {
 	gorm.Model
-	Name        string         `json:"name"`
-	Description string         `json:"description"`
-	Images      pq.StringArray `json:"images" gorm:"type:text[]"`
+	User     user.User         // belongs to User
+	Products []product.Product `gorm:"many2many:order_products;"` // N:N
 }
 
-func NewProduct(name string, description string, images pq.StringArray) *Product {
-	return &Product{
+func NewOrder(name string, description string, images pq.StringArray) *Order {
+	return &Order{
 		Name:        name,
 		Description: description,
 		Images:      images,

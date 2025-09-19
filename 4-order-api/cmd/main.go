@@ -3,7 +3,7 @@ package main
 import (
 	"api/order/configs"
 	"api/order/internal/auth"
-	"api/order/internal/order"
+	"api/order/internal/product"
 	"api/order/internal/user"
 	"api/order/migrations"
 	"api/order/pkg/db"
@@ -20,14 +20,14 @@ func main() {
 	router := http.NewServeMux()
 
 	// Repositories
-	productRepo := order.NewProductRepository(db)
+	productRepo := product.NewProductRepository(db)
 	userRepo := user.NewUserRepository(db)
 
 	// Services
 	authService := auth.NewAuthService(userRepo)
 
 	// Handlers
-	order.NewProductHandler(router, order.ProductHandlerDeps{
+	product.NewProductHandler(router, product.ProductHandlerDeps{
 		Config:            config,
 		ProductRepository: productRepo,
 	})

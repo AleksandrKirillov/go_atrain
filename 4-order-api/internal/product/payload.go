@@ -1,4 +1,4 @@
-package order
+package product
 
 import "github.com/lib/pq"
 

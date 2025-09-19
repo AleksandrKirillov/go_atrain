@@ -1,7 +1,7 @@
 package migrations
 
 import (
-	"api/order/internal/order"
+	"api/order/internal/product"
 	"api/order/internal/user"
 	"os"
 
@@ -22,7 +22,7 @@ func Migrate() {
 	}
 
 	db.AutoMigrate(
-		order.Product{},
+		product.Product{},
 		user.User{},
 	)
 }
